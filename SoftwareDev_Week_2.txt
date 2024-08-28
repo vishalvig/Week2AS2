@@ -1,6 +1,105 @@
+USE [master]
+GO
+/****** Object:  Database [IndustryConnectWeek2]    Script Date: 28-08-2024 23:06:45 ******/
+CREATE DATABASE [IndustryConnectWeek2]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'IndustryConnectWeek2', FILENAME = N'D:\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\IndustryConnectWeek2.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'IndustryConnectWeek2_log', FILENAME = N'D:\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\IndustryConnectWeek2_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [IndustryConnectWeek2].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET RECOVERY FULL 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET  MULTI_USER 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'IndustryConnectWeek2', N'ON'
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
 USE [IndustryConnectWeek2]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetCustomerAmount]    Script Date: 03/06/2024 16:21:03 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetAge]    Script Date: 28-08-2024 23:06:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE function [dbo].[GetAge] (@DateOfBirth datetime)
+returns int
+as
+begin
+
+return( select DATEDIFF(year,@DateOfBirth,GETDATE()))
+/**** GETDATE() gets the current date when the function is executed ****/
+/**** DATEDIFF provides the difference between two dates, first argument "year" returns only that DATEPART ****/
+end 
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetCustomerAmount]    Script Date: 28-08-2024 23:06:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15,8 +114,9 @@ return (select sum(price) from CustomerSales where [Customer Id] = @CustomerId);
 
 --return @amount
 end
+
 GO
-/****** Object:  Table [dbo].[Customer]    Script Date: 03/06/2024 16:21:03 ******/
+/****** Object:  Table [dbo].[Customer]    Script Date: 28-08-2024 23:06:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -32,7 +132,7 @@ CREATE TABLE [dbo].[Customer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Product]    Script Date: 03/06/2024 16:21:03 ******/
+/****** Object:  Table [dbo].[Product]    Script Date: 28-08-2024 23:06:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -49,7 +149,7 @@ CREATE TABLE [dbo].[Product](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Sale]    Script Date: 03/06/2024 16:21:03 ******/
+/****** Object:  Table [dbo].[Sale]    Script Date: 28-08-2024 23:06:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -59,21 +159,24 @@ CREATE TABLE [dbo].[Sale](
 	[CustomerId] [int] NULL,
 	[ProductId] [int] NULL,
 	[DateSold] [datetime] NULL,
+	[StoreId] [int] NULL,
  CONSTRAINT [PK_Sale] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[CustomerSales]    Script Date: 03/06/2024 16:21:03 ******/
+/****** Object:  View [dbo].[CustomerSales]    Script Date: 28-08-2024 23:06:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 CREATE view [dbo].[CustomerSales]
 as
-select c.Id as 'Customer Id', c.FirstName, c.LastName, s.DateSold, p.[Name], p.Price
-, [dbo].[GetCustomerAmount](c.Id) as 'Total Purchases'
+select c.Id as 'Customer Id', c.FirstName, c.LastName,(c.FirstName + ' ' + c.LastName) as 'Full Name', s.DateSold, p.[Name], p.Price
+, [dbo].[GetCustomerAmount](c.Id) as 'Total Purchases', [dbo].[GetAge](c.DateOfBirth) as Age
 	from Customer c
 		left join 
 			Sale s on 
@@ -81,38 +184,50 @@ select c.Id as 'Customer Id', c.FirstName, c.LastName, s.DateSold, p.[Name], p.P
 					left join 
 						Product p on
 							s.ProductId = p.Id 
+
+GO
+/****** Object:  Table [dbo].[Store]    Script Date: 28-08-2024 23:06:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Store](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NULL,
+	[Location] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Store] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
 GO
 SET IDENTITY_INSERT [dbo].[Customer] ON 
-GO
+
 INSERT [dbo].[Customer] ([Id], [FirstName], [LastName], [DateOfBirth]) VALUES (1, N'Andy', N'Mckelvey', CAST(N'2000-12-12T00:00:00.000' AS DateTime))
-GO
 INSERT [dbo].[Customer] ([Id], [FirstName], [LastName], [DateOfBirth]) VALUES (2, N'Callum', N'Jones', CAST(N'2000-12-12T00:00:00.000' AS DateTime))
-GO
 INSERT [dbo].[Customer] ([Id], [FirstName], [LastName], [DateOfBirth]) VALUES (3, N'Abigail', N'Smith', CAST(N'1978-12-01T00:00:00.000' AS DateTime))
-GO
 SET IDENTITY_INSERT [dbo].[Customer] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Product] ON 
-GO
+
 INSERT [dbo].[Product] ([Id], [Name], [Description], [Active], [Price]) VALUES (1, N'Washing Machine', N'Washing Machine', 1, 200.0000)
-GO
 INSERT [dbo].[Product] ([Id], [Name], [Description], [Active], [Price]) VALUES (2, N'Television', N'Television', 1, 450.0000)
-GO
 INSERT [dbo].[Product] ([Id], [Name], [Description], [Active], [Price]) VALUES (3, N'Toaster', N'Toaster', 1, 45.5000)
-GO
 INSERT [dbo].[Product] ([Id], [Name], [Description], [Active], [Price]) VALUES (4, N'Kettle', NULL, 1, 15.0000)
-GO
 SET IDENTITY_INSERT [dbo].[Product] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Sale] ON 
-GO
-INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold]) VALUES (1, 1, 2, CAST(N'2024-06-03T00:00:00.000' AS DateTime))
-GO
-INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold]) VALUES (2, 2, 1, CAST(N'2024-06-03T00:00:00.000' AS DateTime))
-GO
-INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold]) VALUES (3, 1, 3, CAST(N'2024-06-03T00:00:00.000' AS DateTime))
-GO
+
+INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold], [StoreId]) VALUES (1, 1, 2, CAST(N'2024-06-03T00:00:00.000' AS DateTime), NULL)
+INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold], [StoreId]) VALUES (2, 2, 1, CAST(N'2024-06-03T00:00:00.000' AS DateTime), NULL)
+INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold], [StoreId]) VALUES (3, 1, 3, CAST(N'2024-06-03T00:00:00.000' AS DateTime), NULL)
+INSERT [dbo].[Sale] ([Id], [CustomerId], [ProductId], [DateSold], [StoreId]) VALUES (5, 3, 1, CAST(N'2024-08-24T00:00:00.000' AS DateTime), 1)
 SET IDENTITY_INSERT [dbo].[Sale] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Store] ON 
+
+INSERT [dbo].[Store] ([Id], [Name], [Location]) VALUES (1, N'Noel Leaming', N'Silverdale')
+SET IDENTITY_INSERT [dbo].[Store] OFF
 GO
 ALTER TABLE [dbo].[Sale]  WITH CHECK ADD  CONSTRAINT [FK_Sale_Customer] FOREIGN KEY([CustomerId])
 REFERENCES [dbo].[Customer] ([Id])
@@ -124,7 +239,12 @@ REFERENCES [dbo].[Product] ([Id])
 GO
 ALTER TABLE [dbo].[Sale] CHECK CONSTRAINT [FK_Sale_Product]
 GO
-/****** Object:  StoredProcedure [dbo].[InsertProduct]    Script Date: 03/06/2024 16:21:03 ******/
+ALTER TABLE [dbo].[Sale]  WITH CHECK ADD  CONSTRAINT [FK_Sale_Store] FOREIGN KEY([StoreId])
+REFERENCES [dbo].[Store] ([Id])
+GO
+ALTER TABLE [dbo].[Sale] CHECK CONSTRAINT [FK_Sale_Store]
+GO
+/****** Object:  StoredProcedure [dbo].[InsertProduct]    Script Date: 28-08-2024 23:06:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -137,4 +257,9 @@ values
 (@Name,@Price,1)
 
 end
+
+GO
+USE [master]
+GO
+ALTER DATABASE [IndustryConnectWeek2] SET  READ_WRITE 
 GO
